@@ -20,8 +20,8 @@ public class SignalModuleManager {
 	static final String[] portNames1 = new String[] { "/dev/ttySAC3"};
 	static final String[] portNames2 = new String[] { "/dev/ttyO2",
 			"/dev/ttyO3", "/dev/ttyO4" };
-	static final int Baudrate = 250000;
-
+	//static final int Baudrate = 256000;
+	static final int Baudrate = 460800;
 	private static SignalModuleManager singleton = null;
 
 	private SignalModuleManager(UsbManager usbManager) {

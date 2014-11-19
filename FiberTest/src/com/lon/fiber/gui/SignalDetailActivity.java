@@ -12,14 +12,18 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class SignalDetailActivity extends Activity {
 
@@ -35,9 +39,9 @@ public class SignalDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 		setTitle("信号原始波形");
 		setContentView(R.layout.activity_signal_detail);
-
 		signalDetailView = (SignalDetailView) findViewById(R.id.signalView);
 
 		Intent intent = getIntent();
@@ -236,12 +240,22 @@ public class SignalDetailActivity extends Activity {
 	}
 
 	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+        case R.id.action_settings:
+        	this.finish();
+        break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.signal_detail, menu);
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
+	
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
