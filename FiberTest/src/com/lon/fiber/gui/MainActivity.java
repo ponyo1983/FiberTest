@@ -25,10 +25,9 @@ public class MainActivity extends Activity {
 
 	private GridView gridView;
 	// 图片的文字标题
-	private String[] titles = new String[] { "1:测试", "2:设置", "3:关于", };
+	private String[] titles = new String[] { "1:自检", "2:测试",};
 	// 图片ID数组
-	private int[] images = new int[] { R.drawable.pic1, R.drawable.pic3,
-			R.drawable.pic2, };
+	private int[] images = new int[] { R.drawable.pic3, R.drawable.pic1, };
 	SignalModule module;
 
 	@Override
@@ -91,12 +90,13 @@ public class MainActivity extends Activity {
 				switch (position) {
 				case 0:
 					startActivity(new Intent(MainActivity.this,
-							SignalListActivity.class));
+							SelfTestActivity.class));
 					break;
 				case 1:
 					startActivity(new Intent(MainActivity.this,
-							WorkModeActivity.class));
+							SignalListActivity.class));
 					break;
+					
 				case 2: {
 
 					AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);

@@ -47,6 +47,10 @@ public class SignalChannel {
 	Thread threadCheck;
 	Thread threadDSP;
 	
+	int selfTestResult=-1;
+	int realWorkMode=-1; // 0-自检模式 1-工作模式
+	int needWorkMode=-1;
+	
 	private List<ISignalChangedListener> signalChangedListeners=new ArrayList<ISignalChangedListener>();
 	
 	private List<IWorkModeChangedListener> workModeChangedListeners=new ArrayList<IWorkModeChangedListener>();
@@ -87,6 +91,10 @@ public class SignalChannel {
 		return currentSignal;
 	}
 
+	public int getSelfTestResult()
+	{
+		return selfTestResult;
+	}
 	int prevNUM=0;
 	public void putFrame(byte[] frame) {
 
@@ -200,8 +208,15 @@ public class SignalChannel {
 
 		}
 			break;
+		case 0x17: //自检结果
+		{
+			this.realWorkMode=0;
+			this.selfTestResult=(int)(frame[4]&0x0ff);
+			break;
+		}
 		case 0x15: // 采集数据
 		{
+			this.realWorkMode=1;
 			int sampleNum = (frame[4] & 0x0ff)+ ((frame[5] & 0x0ff) << 8);
 			int dataLength = (frame[2] & 0x0ff);
 			
@@ -312,6 +327,39 @@ public class SignalChannel {
 
 	}
 
+	//设置自检模式
+	public void setSelfTest()
+	{
+		
+		byte[] frame = new byte[1];
+		frame[0] = (byte) 0x11;
+		module.sendFrame(frame);
+	}
+	
+	//设置工作模式
+	public void setWorkMode()
+	{
+		
+		byte[] frame = new byte[1];
+		frame[0] = (byte) 0x12;
+		module.sendFrame(frame);
+	}
+	
+	public void setMode(int mode)
+	{
+		this.realWorkMode=-1;
+		this.needWorkMode=mode;
+		switch(mode)
+		{
+		case 0:
+			setSelfTest();
+			break;
+		case 1:
+			setWorkMode();
+			break;
+		}
+	}
+	
 	public void setWorkMode(byte mode) {
 		byte[] frame = new byte[3];
 
@@ -409,44 +457,23 @@ public class SignalChannel {
 				} finally {
 					lock.unlock();
 				}
-				if (!alive) // 模块移除
+				if (!alive) // 没有接收到数据
 				{
-					
-					currentWorkMode = null;
-					setSignal(null);
-					listWorkModes.clear();
-					queryAllWorkMode();
-				} else {
-
-					if (currentWorkMode == null) {
-						if (channelNum == 0) {
-							Log.e("data", "无模式");
-						}
-						boolean modeFind = false;
-						synchronized (listWorkModes) {
-							if (listWorkModes.size() > 0) {
-								WorkMode mode = listWorkModes.get(0);
-								setWorkMode(mode.getMode());
-								modeFind = true;
-								try {
-									Thread.sleep(1000); // 给下位机1秒时间响应
-								} catch (InterruptedException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-						}
-						if (modeFind == false) {
-							queryAllWorkMode();
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
+					realWorkMode=-1;
+				} 
+				if(needWorkMode!=realWorkMode)
+				{
+					switch(needWorkMode)
+					{
+					case 0:
+						SignalChannel.this.setSelfTest();
+						break;
+					case 1:
+						SignalChannel.this.setWorkMode();
+						break;
 					}
 				}
+				
 			}
 
 		}

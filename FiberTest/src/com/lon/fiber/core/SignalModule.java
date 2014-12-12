@@ -19,24 +19,25 @@ public class SignalModule {
 	private Thread threadRcv; // 查询参数的读取
 	private ChannelCollection channels; // 信号通道
 
-	int moduleNum=0;
-	public SignalModule(UsbSerialPort usbPort,int moduleNum)
-	{
+	int moduleNum = 0;
+
+	public SignalModule(UsbSerialPort usbPort, int moduleNum) {
 		this.serialPort = new SerialPort(usbPort);
-		
-		this.moduleNum=moduleNum;
+
+		this.moduleNum = moduleNum;
 		frameManager = new FrameManager(serialPort);
-		
+
 		channels = new ChannelCollection(this, 1);
 	}
-	public SignalModule(String portName, int baudrate,int moduleNum) {
+
+	public SignalModule(String portName, int baudrate, int moduleNum) {
 		// TODO Auto-generated constructor stub
 		try {
 			this.serialPort = new SerialPort(new File(portName), baudrate, 0);
-			
-			this.moduleNum=moduleNum;
+
+			this.moduleNum = moduleNum;
 			frameManager = new FrameManager(serialPort);
-			
+
 			channels = new ChannelCollection(this, 3);
 
 		} catch (SecurityException e) {
@@ -49,16 +50,15 @@ public class SignalModule {
 
 	}
 
-	
-	public int getModuleNum()
-	{
+	public int getModuleNum() {
 		return moduleNum;
 	}
+
 	public SignalChannel getChannel(int index) {
-		
+
 		return channels.getChannel(index);
 	}
-	
+
 	class FrameRcv implements Runnable {
 
 		@Override
@@ -66,12 +66,12 @@ public class SignalModule {
 			// TODO Auto-generated method stub
 			IFrameFilter filter = frameManager.createFilter();
 			try {
-				while (Thread.currentThread().isInterrupted()==false) {
+				while (Thread.currentThread().isInterrupted() == false) {
 					byte[] frame = filter.getFrame(-1);
 
 					if (frame == null)
 						continue;
-					
+
 					channels.processFrame(frame);
 				}
 
@@ -83,53 +83,62 @@ public class SignalModule {
 
 	}
 
-	public void run()
-	{
-		if(threadRcv==null || threadRcv.isInterrupted())
-		{
-			threadRcv=new Thread(new FrameRcv());
+	public void run() {
+		if (threadRcv == null || threadRcv.isInterrupted()) {
+			threadRcv = new Thread(new FrameRcv());
 			threadRcv.start();
 		}
-		//开启通道
+		// 开启通道
 		channels.run();
 	}
-	public void stop()
-	{
-		if(threadRcv!=null && threadRcv.isInterrupted()==false)
-		{
+
+	public void stop() {
+		if (threadRcv != null && threadRcv.isInterrupted() == false) {
 			threadRcv.interrupt();
 		}
-		//停止通道
+		// 停止通道
 		channels.stop();
 	}
-	
-	public void sendFrame(byte[] frame) {
-		if(serialPort==null)return;
-        int length = 10 + frame.length;
-        byte[] totalFrame = new byte[length];
-        //帧头
-        totalFrame[0] = (byte)0xaa;
-        totalFrame[1] = (byte)0xaa;
-        //版本 1
-        totalFrame[2] = 0x01;
-        //数据长度
-        totalFrame[3] = (byte)(frame.length & 0xff);
-        totalFrame[4] = (byte)((frame.length >> 8) & 0xff);
-        //长度的反码
-        totalFrame[5] = (byte)((~totalFrame[3]) & 0xff);
-        totalFrame[6] = (byte)((~totalFrame[4]) & 0xff);
-        //数据
-        int checkSum = 0;
-        for (int i = 0; i < frame.length; i++)
-        {
-            totalFrame[7 + i] = frame[i];
-            checkSum += frame[i];
-        }
-        totalFrame[7 + frame.length] = (byte)(checkSum & 0xff);
-        totalFrame[8 + frame.length] = (byte)'\r';
-        totalFrame[9 + frame.length] = (byte)'\n';
 
-        serialPort.write(totalFrame);
+	public void sendFrame(byte[] frame) {
+		if (serialPort == null)
+			return;
+
+		int length = frame.length;
+		int realLength = length + 2 + 1 + 2 + 2; // 帧头(2)+数据长度(1)+校验(2)+帧尾(2)
+		int infoLength = (length + 2);
+		if (infoLength == 0x10) {
+			realLength++;
+		}
+		for (int i = 0; i < length; i++) {
+			if (frame[i] == (byte) 0x10) {
+				realLength++;
+			}
+		}
+		int index = 0;
+		byte[] totalFrame = new byte[realLength];
+		// 帧头
+		totalFrame[index++] = (byte) 0x10;
+		totalFrame[index++] = (byte) 0x02;
+		// 长度
+		totalFrame[index++] = (byte) infoLength;
+		if (totalFrame[index - 1] == (byte) 0x10) {
+			totalFrame[index++] = (byte) 0x10;
+		}
+		for (int i = 0; i < length; i++) {
+			totalFrame[index++] = frame[i];
+			if (frame[i] == (byte) 0x10) {
+				totalFrame[index++] = frame[i];
+			}
+		}
+		// 校验码
+		totalFrame[index++] = (byte) 0;
+		totalFrame[index++] = (byte) 0;
+		// 帧头
+		totalFrame[index++] = (byte) 0x10;
+		totalFrame[index++] = (byte) 0x03;
+
+		serialPort.write(totalFrame);
 	}
 }
 
@@ -143,10 +152,9 @@ class ChannelCollection {
 			listChannels.add(new SignalChannel(module, i));
 		}
 	}
-	
+
 	public SignalChannel getChannel(int index) {
-		if(index>=0 && index<listChannels.size())
-		{
+		if (index >= 0 && index < listChannels.size()) {
 			return listChannels.get(index);
 		}
 		return null;
@@ -160,9 +168,8 @@ class ChannelCollection {
 		case 1:
 		case 2:
 		case 0x15: {
-			
-			
-			 listChannels.get(0).putFrame(frame);
+
+			listChannels.get(0).putFrame(frame);
 		}
 			break;
 		}
@@ -170,15 +177,13 @@ class ChannelCollection {
 	}
 
 	public void run() {
-		for(SignalChannel channel:listChannels)
-		{
+		for (SignalChannel channel : listChannels) {
 			channel.run();
 		}
 	}
 
 	public void stop() {
-		for(SignalChannel channel:listChannels)
-		{
+		for (SignalChannel channel : listChannels) {
 			channel.stop();
 		}
 	}

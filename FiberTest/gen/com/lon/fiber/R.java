@@ -45,46 +45,51 @@ public final class R {
         public static final int zoom_out=0x7f020012;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a0013;
-        public static final int buttonPlay=0x7f0a0003;
+        public static final int action_settings=0x7f0a0015;
+        public static final int button1=0x7f0a0004;
+        public static final int buttonPlay=0x7f0a0006;
         public static final int gridview=0x7f0a0000;
-        public static final int image=0x7f0a0011;
-        public static final int imageView1=0x7f0a000d;
-        public static final int imageView2=0x7f0a000f;
+        public static final int image=0x7f0a0013;
+        public static final int imageView1=0x7f0a0010;
+        public static final int imageView2=0x7f0a0011;
         public static final int listView1=0x7f0a0001;
-        public static final int moveDown=0x7f0a000b;
-        public static final int moveLeft=0x7f0a0006;
-        public static final int moveRight=0x7f0a0007;
-        public static final int moveUp=0x7f0a000a;
-        public static final int root=0x7f0a0010;
-        public static final int signalView=0x7f0a000c;
-        public static final int spinner1=0x7f0a0002;
-        public static final int textView1=0x7f0a000e;
-        public static final int title=0x7f0a0012;
-        public static final int xZoomIn=0x7f0a0004;
-        public static final int xZoomOut=0x7f0a0005;
-        public static final int yZoomIn=0x7f0a0008;
-        public static final int yZoomOut=0x7f0a0009;
+        public static final int moveDown=0x7f0a000e;
+        public static final int moveLeft=0x7f0a0009;
+        public static final int moveRight=0x7f0a000a;
+        public static final int moveUp=0x7f0a000d;
+        public static final int root=0x7f0a0012;
+        public static final int signalView=0x7f0a000f;
+        public static final int spinner1=0x7f0a0005;
+        public static final int textView1=0x7f0a0002;
+        public static final int textView2=0x7f0a0003;
+        public static final int title=0x7f0a0014;
+        public static final int xZoomIn=0x7f0a0007;
+        public static final int xZoomOut=0x7f0a0008;
+        public static final int yZoomIn=0x7f0a000b;
+        public static final int yZoomOut=0x7f0a000c;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int activity_mode_setting=0x7f030001;
-        public static final int activity_signal_detail=0x7f030002;
-        public static final int activity_signal_list=0x7f030003;
-        public static final int mode_setting=0x7f030004;
-        public static final int picture_item=0x7f030005;
+        public static final int activity_self_test=0x7f030002;
+        public static final int activity_signal_detail=0x7f030003;
+        public static final int activity_signal_list=0x7f030004;
+        public static final int mode_setting=0x7f030005;
+        public static final int picture_item=0x7f030006;
     }
     public static final class menu {
         public static final int main=0x7f090000;
         public static final int mode_setting=0x7f090001;
-        public static final int signal_detail=0x7f090002;
-        public static final int signal_list=0x7f090003;
+        public static final int self_test=0x7f090002;
+        public static final int signal_detail=0x7f090003;
+        public static final int signal_list=0x7f090004;
     }
     public static final class string {
         public static final int action_settings=0x7f070001;
         public static final int app_name=0x7f070000;
         public static final int hello_world=0x7f070002;
         public static final int title_activity_mode_setting=0x7f070003;
+        public static final int title_activity_self_test=0x7f070006;
         public static final int title_activity_signal_detail=0x7f070005;
         public static final int title_activity_signal_list=0x7f070004;
     }

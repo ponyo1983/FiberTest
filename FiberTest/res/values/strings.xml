@@ -7,5 +7,6 @@
     <string name="title_activity_mode_setting">ModeSettingActivity</string>
     <string name="title_activity_signal_list">SignalListActivity</string>
     <string name="title_activity_signal_detail">SignalDetailActivity</string>
+    <string name="title_activity_self_test">SelfTestActivity</string>
 
 </resources>
