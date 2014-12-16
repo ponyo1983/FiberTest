@@ -167,6 +167,7 @@ class ChannelCollection {
 		case 0:
 		case 1:
 		case 2:
+		case 0x17:
 		case 0x15: {
 
 			listChannels.get(0).putFrame(frame);

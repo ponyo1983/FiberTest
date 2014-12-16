@@ -105,7 +105,8 @@ public class SignalChannel {
 			lock.unlock();
 		}
 
-		int cmd = frame[3];
+		int cmd = (frame[3]&0x0ff);
+		
 		switch (cmd) {
 		case 0: // 所有工作模式
 		{
