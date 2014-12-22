@@ -77,7 +77,7 @@ public class SelfTestActivity extends Activity {
 			else if(r<40)
 			{
 				resultView.setTextColor(android.graphics.Color.GREEN);
-				resultView.setText("测试结果为:"+r+",测试通过，可以开始测试了！");
+				resultView.setText("自检数值为:"+r+"\r\n测试通过，可以开始测试了！");
 			}
 			else
 			{

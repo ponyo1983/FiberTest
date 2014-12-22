@@ -252,7 +252,7 @@ public class SignalChannel {
 		{
 			Log.e("MISS:"+(module.getModuleNum()*3+ channelNum), String.valueOf(sampleNum));
 			
-			OneSampleLength=0; //重置
+			//OneSampleLength=0; //重置
 		}
 		prevSampleNum=sampleNum;
 		for(int i=0;i<length;i++)
@@ -514,7 +514,7 @@ public class SignalChannel {
 		public void run() {
 			// TODO Auto-generated method stub
 
-			IDataBlock dataBlock = addDataBlock(1000, 1000);
+			IDataBlock dataBlock = addDataBlock(100, 1000); //改为0.1秒刷新
 			
 			
 			try {

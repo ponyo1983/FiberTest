@@ -40,7 +40,7 @@ public class SignalDetailActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
-		setTitle("信号原始波形");
+		setTitle("信号分析");
 		setContentView(R.layout.activity_signal_detail);
 		signalDetailView = (SignalDetailView) findViewById(R.id.signalView);
 
@@ -87,7 +87,7 @@ public class SignalDetailActivity extends Activity {
 			}
 		};
 		
-		SignalChannel channel=SignalModuleManager.getInstance().getChannel(channelIndex);
+		SignalChannel channel=SignalModuleManager.getInstance().getChannel(0);
 		
 		channel.addSignalChangedListener(signalChangedListener); //信号改变监听
 		//channel.addWorkModeChangedListener(workModeChangedListener); //工作模式监听
@@ -260,7 +260,7 @@ public class SignalDetailActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		SignalModuleManager.getInstance().getChannel(channelIndex)
+		SignalModuleManager.getInstance().getChannel(0)
 				.removeSignalChangedListener(signalChangedListener);
 
 	}
